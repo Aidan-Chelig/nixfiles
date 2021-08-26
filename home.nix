@@ -1,36 +1,57 @@
 { config, pkgs, ... }:
 
 {
-  home.packages = [
+  home.packages = with pkgs; [
     #development
-    pkgs.editorconfig-core-c
-    pkgs.jq
-    pkgs.nixfmt
-    pkgs.rust-analyzer
-    pkgs.shellcheck
-    pkgs.bat
-    pkgs.ripgrep
-    pkgs.exa
+    editorconfig-core-c
+    jq
+    nixfmt
+    rust-analyzer
+    shellcheck
+    bat
+    ripgrep
+    exa
 
     #multimedia
-    pkgs.spotify
-    pkgs.spicetify-cli
-    pkgs.playerctl
+    spotify
+    spicetify-cli
+    playerctl
+    vlc
 
     #productivity
-    pkgs.aseprite
-    pkgs.krita
+    aseprite
+    krita
+    libreoffice
+    kdenlive
+    blender
+    darktable
+    write_stylus
 
     #messeging
-    pkgs.signal-desktop
-    pkgs.discord
+    signal-desktop
+    discord
 
     #desktop utils
-    pkgs.pcmanfm
-    pkgs.xdg-utils
-    pkgs.keepass
-    pkgs.nwg-launchers
-    pkgs.ulauncher
+    pcmanfm
+    xdg-utils
+    keepass
+    nwg-launchers
+    ulauncher
+    bibata-cursors
+
+    #sway
+	swaylock
+      wofi
+      alacritty
+      # wl-clipboard
+      waybar
+      autotiling
+      flashfocus
+      wf-recorder
+      slurp
+      grim
+      v4l-utils
+      swayidle
   ];
 
   home.sessionVariables = {
@@ -39,9 +60,18 @@
     MOZ_USE_XINPUT2 = "1";
   };
 
-  home.file.".profile".text = ''
+ wayland.windowManager.sway = {
+ enable = true;
+ wrapperFeatures.gtk = true;
+ };
+
+  home.file = {
+  ".profile".text = ''
   . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
   '';
+
+  ".config/sway/customconfig".source = ./swayconfig;
+  };
 
 #  programs.firefox = {
 #    enable = true;
@@ -64,6 +94,8 @@ programs.zsh = {
     hms = "home-manager switch";
   };
 };
+
+
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
@@ -79,6 +111,11 @@ programs.zsh = {
   gtk.theme.name = "vimix-dark-doder";
   gtk.iconTheme.package = pkgs.flat-remix-icon-theme;
   gtk.iconTheme.name = "Flat-Remix-Blue";
+  gtk.gtk3.extraConfig.gtk-cursor-theme-name = "Bibata Classic";
+
+  gtk.gtk2.extraConfig = ''
+    gtk-cursor-theme-name = "Bibata Classic"
+  '';
 
   programs.starship = {
   enable = true;
